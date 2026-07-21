@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guess The Number</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --panel: #12121c;
+      --border: #2a2a3e;
+      --accent: #00ffcc;
+      --danger: #ff3366;
+      --warn: #ffcc00;
+      --text: #e0e0f0;
+      --muted: #555570;
+      --glow: 0 0 16px #00ffcc88;
+      --glow-danger: 0 0 16px #ff336688;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px
+      );
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,204,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,204,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      width: min(480px, 94vw);
+      background: var(--panel);
+      border: 2px solid var(--accent);
+      box-shadow: var(--glow), inset 0 0 60px rgba(0,255,204,0.03);
+      padding: 2rem 2.2rem 2.4rem;
+      animation: boot 0.6s ease both;
+    }
+
+    @keyframes boot {
+      from { opacity: 0; transform: scale(0.94) translateY(18px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .container::before, .container::after {
+      content: '';
+      position: absolute;
+      width: 14px; height: 14px;
+      border-color: var(--accent);
+      border-style: solid;
+    }
+    .container::before { top: -2px; left: -2px; border-width: 3px 0 0 3px; }
+    .container::after  { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; }
+
+    h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(0.7rem, 3vw, 0.95rem);
+      color: var(--accent);
+      text-shadow: var(--glow);
+      text-align: center;
+      letter-spacing: 0.04em;
+      line-height: 1.8;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 1.6rem;
+      letter-spacing: 0.08em;
+    }
+
+    .difficulty-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.4rem;
+      justify-content: center;
+    }
+
+    .diff-btn {
+      flex: 1;
+      padding: 0.45rem 0.3rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.18s;
+      text-transform: uppercase;
+    }
+    .diff-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .diff-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(0,255,204,0.07);
+      box-shadow: var(--glow);
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid var(--border);
+      letter-spacing: 0.06em;
+    }
+    .stats span { color: var(--text); }
+
+    .range-display {
+      text-align: center;
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      letter-spacing: 0.07em;
+    }
+    .range-display strong { color: var(--warn); }
+
+    .input-row {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    input[type="number"] {
+      flex: 1;
+      background: #08080f;
+      border: 2px solid var(--border);
+      color: var(--accent);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.1rem;
+      padding: 0.7rem 0.8rem;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    input[type="number"]:focus {
+      border-color: var(--accent);
+      box-shadow: var(--glow);
+    }
+
+    .guess-btn {
+      padding: 0.7rem 1.2rem;
+      background: var(--accent);
+      border: none;
+      color: #000;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.6rem;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: transform 0.1s, box-shadow 0.18s;
+      white-space: nowrap;
+    }
+    .guess-btn:hover { box-shadow: var(--glow); transform: translateY(-1px); }
+    .guess-btn:active { transform: translateY(1px); }
+    .guess-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+    .attempts-label {
+      font-size: 0.62rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.07em;
+    }
+    .attempts-track {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 1.2rem;
+    }
+    .attempt-pip {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .attempt-pip.used { background: var(--accent); }
+    .attempt-pip.last { background: var(--danger); }
+
+    .message {
+      min-height: 3.8rem;
+      border: 1px solid var(--border);
+      padding: 0.7rem 0.8rem;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .message.hot   { color: var(--danger); border-color: var(--danger); }
+    .message.warm  { color: var(--warn);   border-color: var(--warn); }
+    .message.cold  { color: #66ccff;       border-color: #66ccff; }
+    .message.win   { color: var(--accent); border-color: var(--accent); box-shadow: var(--glow); }
+    .message.lose  { color: var(--danger); border-color: var(--danger); box-shadow: var(--glow-danger); }
+
+    .message .blink { animation: blink 0.7s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .history {
+      margin-top: 1rem;
+      max-height: 80px;
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .history::-webkit-scrollbar { width: 3px; }
+    .history::-webkit-scrollbar-thumb { background: var(--border); }
+
+    .history-tag {
+      font-size: 0.6rem;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .history-tag.high { border-color: #ff336644; color: #ff6688; }
+    .history-tag.low  { border-color: #66aaff44; color: #88bbff; }
+
+    .new-btn {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.6rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    .new-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: var(--glow);
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-6px); }
+      40%      { transform: translateX(6px); }
+      60%      { transform: translateX(-4px); }
+      80%      { transform: translateX(4px); }
+    }
+    .shake { animation: shake 0.35s ease; }
+
+    @keyframes win-pulse {
+      0%, 100% { box-shadow: var(--glow); }
+      50%       { box-shadow: 0 0 40px #00ffcccc; }
+    }
+    .win-anim { animation: win-pulse 0.8s ease 3; }
+  </style>
+</head>
+<body>
+<div class="container" id="gameBox">
+  <h1>GUESS THE<br>NUMBER</h1>
+  <p class="subtitle">// a classic arcade challenge //</p>
+
+  <div class="difficulty-row">
+    <button class="diff-btn active" data-diff="easy">EASY<br><span style="color:#555570;font-size:0.55rem">1–50 · 10 tries</span></button>
+    <button class="diff-btn" data-diff="medium">MEDIUM<br><span style="color:#555570;font-size:0.55rem">1–100 · 7 tries</span></button>
+    <button class="diff-btn" data-diff="hard">HARD<br><span style="color:#555570;font-size:0.55rem">1–200 · 5 tries</span></button>
+  </div>
+
+  <div class="stats">
+    WINS: <span id="wins">0</span> &nbsp;|&nbsp;
+    LOSSES: <span id="losses">0</span> &nbsp;|&nbsp;
+    STREAK: <span id="streak">0</span>🔥
+  </div>
+
+  <div class="range-display">
+    PICK A NUMBER BETWEEN <strong id="rangeLabel">1 – 50</strong>
+  </div>
+
+  <div class="input-row">
+    <input type="number" id="guessInput" placeholder="???" min="1" max="50"/>
+    <button class="guess-btn" id="guessBtn">FIRE</button>
+  </div>
+
+  <div class="attempts-label">ATTEMPTS REMAINING: <span id="attemptsLeft">10</span></div>
+  <div class="attempts-track" id="attemptsPips"></div>
+
+  <div class="message" id="message">
+    Enter your guess and press FIRE.<span class="blink">_</span>
+  </div>
+
+  <div class="history" id="history"></div>
+
+  <button class="new-btn" id="newBtn">[ NEW GAME ]</button>
+</div>
+
+<script>
+  const DIFFICULTIES = {
+    easy:   { max: 50,  tries: 10 },
+    medium: { max: 100, tries: 7  },
+    hard:   { max: 200, tries: 5  }
+  };
+
+  let secret, maxTries, attemptsLeft, gameOver;
+  let currentDiff = 'easy';
+  let wins = 0, losses = 0, streak = 0;
+
+  const guessInput = document.getElementById('guessInput');
+  const guessBtn   = document.getElementById('guessBtn');
+  const newBtn     = document.getElementById('newBtn');
+  const msgEl      = document.getElementById('message');
+  const attLeftEl  = document.getElementById('attemptsLeft');
+  const pipsEl     = document.getElementById('attemptsPips');
+  const historyEl  = document.getElementById('history');
+  const rangeLabel = document.getElementById('rangeLabel');
+  const winsEl     = document.getElementById('wins');
+  const lossesEl   = document.getElementById('losses');
+  const streakEl   = document.getElementById('streak');
+  const diffBtns   = document.querySelectorAll('.diff-btn');
+
+  function startGame() {
+    const cfg = DIFFICULTIES[currentDiff];
+    secret = Math.floor(Math.random() * cfg.max) + 1;
+    maxTries = cfg.tries;
+    attemptsLeft = maxTries;
+    gameOver = false;
+
+    guessInput.max = cfg.max;
+    guessInput.min = 1;
+    guessInput.value = '';
+    guessInput.disabled = false;
+    guessBtn.disabled = false;
+
+    rangeLabel.textContent = `1 – ${cfg.max}`;
+    attLeftEl.textContent = attemptsLeft;
+
+    setMessage('Enter your guess and press FIRE.<span class="blink">_</span>', '');
+    renderPips();
+    historyEl.innerHTML = '';
+    guessInput.focus();
+  }
+
+  function renderPips() {
+    pipsEl.innerHTML = '';
+    for (let i = 0; i < maxTries; i++) {
+      const pip = document.createElement('div');
+      pip.className = 'attempt-pip';
+      const used = maxTries - attemptsLeft;
+      if (i < used) pip.classList.add('used');
+      if (attemptsLeft === 1 && i === used) pip.classList.add('last');
+      pipsEl.appendChild(pip);
+    }
+  }
+
+  function setMessage(html, type) {
+    msgEl.className = 'message' + (type ? ' ' + type : '');
+    msgEl.innerHTML = html;
+  }
+
+  function addHistory(num, hint) {
+    const tag = document.createElement('div');
+    tag.className = 'history-tag ' + hint;
+    tag.textContent = num;
+    historyEl.appendChild(tag);
+  }
+
+  function shakeInput() {
+    guessInput.classList.remove('shake');
+    void guessInput.offsetWidth;
+    guessInput.classList.add('shake');
+    guessInput.addEventListener('animationend', () => guessInput.classList.remove('shake'), { once: true });
+  }
+
+  function processGuess() {
+    if (gameOver) return;
+
+    const val = parseInt(guessInput.value, 10);
+    const cfg = DIFFICULTIES[currentDiff];
+
+    if (isNaN(val) || val < 1 || val > cfg.max) {
+      shakeInput();
+      setMessage(`⚠ Enter a valid number between 1 and ${cfg.max}.`, '');
+      return;
+    }
+
+    attemptsLeft--;
+    const diff = Math.abs(val - secret);
+
+    if (val === secret) {
+      gameOver = true;
+      wins++; streak++;
+      updateStats();
+      renderPips();
+      setMessage(`✔ CORRECT! The number was <strong>${secret}</strong>.<br>Used ${maxTries - attemptsLeft} of ${maxTries} attempts.`, 'win');
+      const box = document.getElementById('gameBox');
+      box.classList.remove('win-anim');
+      void box.offsetWidth;
+      box.classList.add('win-anim');
+      guessInput.disabled = true;
+      guessBtn.disabled = true;
+      addHistory(val, '');
+      return;
+    }
+
+    addHistory(val, val < secret ? 'low' : 'high');
+    renderPips();
+    attLeftEl.textContent = attemptsLeft;
+
+    if (attemptsLeft === 0) {
+      gameOver = true;
+      losses++; streak = 0;
+      updateStats();
+      setMessage(`✖ GAME OVER. The number was <strong>${secret}</strong>.<br>Better luck next time!`, 'lose');
+      guessInput.disabled = true;
+      guessBtn.disabled = true;
+      shakeInput();
+      return;
+    }
+
+    let type, hint;
+    if (diff <= 5)       { type = 'hot';  hint = `🔥 SCORCHING! Very close — go ${val < secret ? 'higher' : 'lower'}!`; }
+    else if (diff <= 15) { type = 'warm'; hint = `♨ WARM — ${val < secret ? 'higher' : 'lower'}.`; }
+    else                 { type = 'cold'; hint = `❄ COLD — try much ${val < secret ? 'higher' : 'lower'}.`; }
+
+    setMessage(`${hint} (${attemptsLeft} attempt${attemptsLeft !== 1 ? 's' : ''} left)`, type);
+    guessInput.value = '';
+    guessInput.focus();
+  }
+
+  function updateStats() {
+    winsEl.textContent   = wins;
+    lossesEl.textContent = losses;
+    streakEl.textContent = streak;
+  }
+
+  guessBtn.addEventListener('click', processGuess);
+  guessInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') processGuess(); });
+  newBtn.addEventListener('click', startGame);
+
+  diffBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      diffBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentDiff = btn.dataset.diff;
+      startGame();
+    });
+  });
+
+  startGame();
+</script>
+</body>
+</html>
