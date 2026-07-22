@@ -37,7 +37,6 @@ Number-Guessing-Game/
 ├── index.html
 ├── style.css
 ├── script.js
-├── assets/
 └── README.md
 ```
 
@@ -52,7 +51,7 @@ Number-Guessing-Game/
    - 📉 Too Low
    - 📈 Too High
    - ✅ Correct Guess
-5. The game continues until the correct number is guessed.
+5. The game continues until the correct number is guessed or number of attempts are finished.
 
 ---
 
@@ -61,7 +60,7 @@ Number-Guessing-Game/
 ### Clone the repository
 
 ```bash
-git clone https://github.com/your-username/Number-Guessing-Game.git
+git clone https://github.com/var-shi-tha-9/Number-Guessing-Game.git
 ```
 
 ### Navigate to the project
@@ -122,15 +121,10 @@ This project demonstrates:
 
 ## 🔮 Future Enhancements
 
-- Multiple difficulty levels
-- Scoreboard and high scores
+- High scores
 - Timer challenge mode
 - Sound effects and animations
 - Dark/Light theme toggle
 - Multiplayer mode
 
 ---
-
-## ⭐ Support
-
-If you found this project useful, consider giving it a ⭐ on GitHub!
