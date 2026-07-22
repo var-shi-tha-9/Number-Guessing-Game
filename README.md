@@ -1,34 +1,31 @@
-# 🎮 Number Guessing Game
+ # 🎮 Number Guessing Game Web Application
 
-An interactive **Number Guessing Game** developed in **Java** where the computer generates a random number and the player attempts to guess it. The game provides hints after each attempt, helping the player reach the correct answer while demonstrating core Java programming concepts.
+An interactive and responsive web application that challenges users to guess a randomly generated number within a specified range. Built using modern web technologies, the game provides instant feedback, tracks user attempts, and offers an engaging user experience while demonstrating core programming logic and front-end development skills.
 
 ---
 
 ## 📖 Overview
 
-The Number Guessing Game is a beginner-friendly Java project designed to strengthen programming fundamentals. The application generates a random number within a specified range and allows the user to guess the number through a simple console interface. After every guess, the program provides feedback such as **Too High**, **Too Low**, or **Correct**, making the game interactive and engaging.
+The Number Guessing Game is a fun and interactive web application where players attempt to guess a randomly generated number. After each guess, the application provides hints such as **Too High**, **Too Low**, or **Correct**, helping the player reach the correct answer. The project showcases JavaScript logic, DOM manipulation, event handling, and responsive web design.
 
 ---
 
 ## ✨ Features
 
-- 🎲 Random number generation
-- 💡 Hint-based gameplay (Too High / Too Low)
-- 🎯 Unlimited guessing attempts (or configurable)
-- 🖥️ Simple console-based interface
-- ⚡ Fast and lightweight application
-- 📚 Beginner-friendly Java project
+- 🎯 Random number generation
+- 💡 Instant feedback after every guess
+- 🔢 Tracks the number of attempts
+- 🔄 Restart game functionality
+- 📱 Responsive design for desktop and mobile devices
+- ⚡ Fast and interactive user experience
 
 ---
 
 ## 🛠️ Technologies Used
 
-- Java
-- Object-Oriented Programming (OOP)
-- Java Random Class
-- Scanner Class
-- Conditional Statements
-- Loops
+- HTML5
+- CSS3
+- JavaScript (ES6)
 
 ---
 
@@ -37,20 +34,20 @@ The Number Guessing Game is a beginner-friendly Java project designed to strengt
 ```
 Number-Guessing-Game/
 │
-├── src/
-│   └── NumberGuessingGame.java
-│
-├── README.md
-└── LICENSE
+├── index.html
+├── style.css
+├── script.js
+├── assets/
+└── README.md
 ```
 
 ---
 
 ## 🚀 How It Works
 
-1. The system generates a random number.
-2. The player enters a guess.
-3. The program compares the guess with the generated number.
+1. The application generates a random number.
+2. The user enters a guess.
+3. The application compares the input with the generated number.
 4. Feedback is displayed:
    - 📉 Too Low
    - 📈 Too High
@@ -61,159 +58,79 @@ Number-Guessing-Game/
 
 ## 💻 Installation
 
-### Clone the Repository
+### Clone the repository
 
 ```bash
 git clone https://github.com/your-username/Number-Guessing-Game.git
 ```
 
-### Navigate to the Project
+### Navigate to the project
 
 ```bash
 cd Number-Guessing-Game
 ```
 
-### Compile
+### Run the application
 
-```bash
-javac NumberGuessingGame.java
-```
+Simply open **index.html** in your preferred web browser.
 
-### Run
-
-```bash
-java NumberGuessingGame
-```
+Or, if you're using **VS Code**, install the **Live Server** extension and click **Go Live**.
 
 ---
 
-## 📸 Sample Output
+## 📸 Preview
 
 ```
-Welcome to Number Guessing Game!
+🎮 Number Guessing Game
 
 Guess a number between 1 and 100
 
-Enter your guess: 45
+[ 45 ]
+
+[ Guess ]
 
 Too Low!
 
-Enter your guess: 72
-
-Too High!
-
-Enter your guess: 61
-
-🎉 Congratulations!
-You guessed the correct number.
+Attempts: 3
 ```
 
 ---
 
-## 📚 Concepts Demonstrated
+## 📚 Skills Demonstrated
 
-- Java Programming
-- Object-Oriented Programming
+- HTML Structure
+- CSS Styling
+- JavaScript Programming
+- DOM Manipulation
+- Event Handling
 - Random Number Generation
-- User Input Handling
-- Conditional Logic
-- Loops
-- Problem Solving
+- Responsive Web Design
 
 ---
 
 ## 🎯 Learning Outcomes
 
-This project helped in understanding:
+This project demonstrates:
 
-- Java syntax
-- Decision-making statements
-- Looping constructs
-- User interaction
-- Console application development
-- Debugging and logical thinking
+- Front-end web development
+- Interactive UI design
+- JavaScript logic implementation
+- User input validation
+- Problem-solving and debugging
 
 ---
 
 ## 🔮 Future Enhancements
 
-- Difficulty Levels (Easy, Medium, Hard)
-- Limited Attempts
-- Score Tracking
-- Timer Mode
-- High Score System
-- Java Swing GUI Version
+- Multiple difficulty levels
+- Scoreboard and high scores
+- Timer challenge mode
+- Sound effects and animations
+- Dark/Light theme toggle
+- Multiplayer mode
 
 ---
 
+## ⭐ Support
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+If you found this project useful, consider giving it a ⭐ on GitHub!
